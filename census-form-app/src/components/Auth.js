@@ -13,25 +13,25 @@ export default function Login() {
                     <form style={{ borderTopColor: "var(--bs-emphasis-color)" }}>
                     <div className="mb-3">
                         <label className="form-label" for="email">
-                        Codigo
+                        CFN
                         </label>
                         <input
                         className="form-control item"
-                        type="codigo"
-                        id="codigo"
-                        name="codigo"
+                        type="CFN"
+                        id="CFN"
+                        name="CFN"
                         data-bs-theme="light"
                         />
                     </div>
                     <div className="mb-3">
                         <label className="form-label" for="password">
-                        Codigo
+                        ECN
                         </label>
                         <input
                         className="form-control"
-                        type="password"
-                        id="password"
-                        name="password"
+                        type="ECN"
+                        id="ECN"
+                        name="ECN"
                         data-bs-theme="light"
                         />
                     </div>

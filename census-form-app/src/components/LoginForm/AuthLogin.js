@@ -8,11 +8,11 @@ const AuthLogin = (event) => {
     const data = new FormData(event.currentTarget);
     // Crear el objeto de usuario
     const formUser = {
-        codigo: data.get("codigo"),
-        password: data.get("password"),
+        CFN: data.get("CFN"),
+        ECN: data.get("ECN"),
     }
     // Crear el usuario
-    signInWithEmailAndPassword(auth, formUser.codigo, formUser.password)
+    signInWithEmailAndPassword(auth, formUser.CFN, formUser.ECN)
         .then(() => {
             // Limpiar el formulario
             event.target.reset();
