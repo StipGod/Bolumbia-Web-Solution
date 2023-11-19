@@ -3,7 +3,7 @@ const router = express.Router();
 const formController = require('../controllers/formController');
 
 // el user id seria la cedula esa o cualquie cosa
-router.get('/:userId', formController.getForm);
+router.get('/getForm', formController.getForm);
 
 router.post('/save', formController.saveForm);
 
