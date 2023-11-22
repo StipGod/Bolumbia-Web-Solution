@@ -1,6 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import picture from "../assets/img/scenery/image5.jpg";
+import passport_picture from "../assets/img/scenery/image7.jpg";
+import cedula_digital_picture from "../assets/img/scenery/image8.jpg";
+import renta_picture from "../assets/img/scenery/image9.jpg";
+
 
 export default function Carrusel() {
     return (
@@ -12,24 +16,24 @@ export default function Carrusel() {
         </div>
         <div class="carousel-inner">
             <div class="carousel-item active">
-            <img className="card-img-top w-100 d-block" src={picture} alt="..."/>
+            <img className="card-img-top w-100 d-block" src={passport_picture} alt="..."/>
             <div class="carousel-caption d-none d-md-block">
-                <h5>First slide label</h5>
-                <p>Some representative placeholder content for the first slide.</p>
+                <h5>¿Conoces el nuevo trámite del pasaporte?</h5>
+                <p>¡Descubre cómo obtenerlo en menos tiempo!</p> {/*  tener tu pasaporte en menos de 5 días */}
             </div>
             </div>
             <div class="carousel-item">
-            <img className="card-img-top w-100 d-block" src={picture} alt="..."/>
+            <img className="card-img-top w-100 d-block" src={cedula_digital_picture} alt="..."/>
             <div class="carousel-caption d-none d-md-block">
-                <h5>Second slide label</h5>
-                <p>Some representative placeholder content for the second slide.</p>
+                <h5>Saca tu cédula digital aquí</h5>
+                <p>¡Echa un vistazo a esta simple manera de...</p>
             </div>
             </div>
             <div class="carousel-item">
-            <img className="card-img-top w-100 d-block" src={picture} alt="..."/>
+            <img className="card-img-top w-100 d-block" src={renta_picture} alt="..."/>
             <div class="carousel-caption d-none d-md-block">
-                <h5>Third slide label</h5>
-                <p>Some representative placeholder content for the third slide.</p>
+                <h5>Como declarar renta en 10 simples pasos</h5>
+                <p>Aprende a declarar tu propia renta en menos de dos horas</p>
             </div>
             </div>
         </div>

@@ -2,14 +2,14 @@ import React from "react";
 import picture from "../assets/img/scenery/image5.jpg"
 import { Link } from "react-router-dom";
 
+
 export default function Login() {
     return(
         <div className="col-md-6 col-lg-4">
             <div className="card" style={{boxShadow: '0px 2px 8px'}}>
                 <div className="card-body">
                     <h3 className="card-title">¿Desea llenar el formulario?</h3>
-                    <p className="card-text">Explicación... Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc quam urna, dignissim nec auctor in.
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc quam urna, dignissim nec auctor in</p>
+                    <p className="card-text">Para iniciar sesión en el sistema, debe ingresar su CFN y ECN</p>
                     <form style={{ borderTopColor: "var(--bs-emphasis-color)" }}>
                     <div className="mb-3">
                         <label className="form-label" for="email">
