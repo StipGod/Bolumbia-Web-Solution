@@ -1,3 +1,4 @@
+import axios from "axios";
 import React from "react";
 import picture from "../assets/img/scenery/image5.jpg"
 import { Link } from "react-router-dom";
@@ -7,23 +8,15 @@ export default function Login() {
     const [cfn, setCFN] = useState("");
     const [ecn, setECN] = useState("");
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
 
-        fetch("URL_DEL_BACKEND", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ cfn, ecn }),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log(data);
-            })
-            .catch((error) => {
-                console.error("Error al enviar datos al backend:", error);
-            });
+        try {
+            const response = await axios.post('/api/auth/login', { cfn, ecn }); //falta ip  
+            console.log(response.data);
+        } catch (error) {
+            console.error("Error al enviar datos al backend:", error.response ? error.response.data : error.message);
+        }
     };
 
     return(

@@ -6,6 +6,8 @@ import CensusFormPage from './pages/CensusFormPage'
 import CensusResultsPage from './pages/CensusResultsPage'
 import AboutUs from './pages/AboutUs'
 import Contact from './pages/Contact'
+import Soporte from './pages/Soporte'
+
 
 import './App.css'
 import 'bootstrap/dist/js/bootstrap.min.js';
@@ -22,6 +24,8 @@ function App() {
         <Route path="/census-results" element={<CensusResultsPage />} />
         <Route path="/acerca-de-nosotros" element={<AboutUs />} />
         <Route path="/contacto" element={<Contact />} />
+        <Route path="/soporte" element={<Soporte />} />
+
       </Routes>
     </Router>
   );

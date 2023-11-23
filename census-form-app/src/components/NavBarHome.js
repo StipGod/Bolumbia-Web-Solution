@@ -16,13 +16,13 @@ export default function NavBarHome() {
             </Link>
           </li>
           <li className="nav-item">
-            <Link className="nav-link" to="/">
-              Página 1
+            <Link className="nav-link" to="/soporte">
+              Soporte
             </Link>
           </li>
           <li className="nav-item">
             <Link className="nav-link" to="/contacto">
-              Contactenos
+              Contáctenos
             </Link>
           </li>
           <li className="nav-item">

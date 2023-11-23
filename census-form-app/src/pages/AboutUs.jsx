@@ -16,7 +16,7 @@ export default function AboutUs() {
                   <h1>Sistema de Censo Electrónico</h1>
                 </header>
                 <div className="about-us-content">
-                  <div className="left-column">
+                  <div className="left-column">                    
                     <img src="team-image.jpg" alt="Equipo" />
                   </div>
                   <div className="right-column">
@@ -36,7 +36,17 @@ export default function AboutUs() {
                   <h2>Nuestro Equipo</h2>
                   <div className="team-member">
                     <img src="team-member1.jpg" alt="Miembro del equipo 1" />
-                    <h3>Brigith Lorena Giraldo Vargas</h3>
+                    <h4>Brigith Lorena Giraldo Vargas</h4>
+                    <img src="team-member2.jpg" alt="Miembro del equipo 2" />
+                    <h4>Damián Duque</h4>
+                    <img src="team-member3.jpg" alt="Miembro del equipo 3" />
+                    <h4>Esteban Bernal</h4>
+                    <img src="team-member4.jpg" alt="Miembro del equipo 4" />
+                    <h4>Juan José Sánchez</h4>
+                    <img src="team-member5.jpg" alt="Miembro del equipo 5" />
+                    <h4>Daniel Palacios</h4>
+                    <img src="team-member6.jpg" alt="Miembro del equipo 6" />
+                    <h4>Tomás Bernal</h4>
                   </div>
                 </div>
                 </div>

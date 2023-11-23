@@ -3,6 +3,13 @@ const pool = require('../db');
 exports.login = async (req, res) => {
   try {
     const { ecn, cfn } = req.body;
+    
+    const ecnCheck = 'SELECT "CensusData" FROM "CensusForm" WHERE "ECN" = $1 AND "state" != $2'; 
+    const check = await pool.query(ecnCheck, [ecn, 'R']);
+    
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'ECN not found or form already completed' });
+    }
 
     const query = `
     SELECT cf.*
