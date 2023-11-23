@@ -17,6 +17,14 @@ export default function CensusFormPage() {
   const [calificacionExperiencia, setCalificacionExperiencia] = useState("");
   const [comentarios, setComentarios] = useState("");
 
+  const [ecn, setEcn] = useState("");
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const ecnFromUrl = searchParams.get("ECN");
+    setEcn(ecnFromUrl || "");
+  }, [location.search]);
+
   const handleEnviarFormulario = async () => {
     const formData = {
       npersonas: numeroPersonas,
@@ -41,12 +49,13 @@ export default function CensusFormPage() {
     };
 
     try {
-      const response = await axios.post(`/api/forms/save`, { ecn: "miau", ...formData });
-      const stateChange = await axios.post('/api/forms/submit', { ecn: "miau"})
+      const response = await axios.post(`/api/forms/save`, { ecn, ...formData });
+      const stateChange = await axios.post('/api/forms/submit', { ecn });
       console.log(response.data.message);
     } catch (error) {
-      console.error('There was a problem saving the form data:', error.response ? error.response.data : error.message);
+      console.error('Hubo un problema al guardar los datos del formulario:', error.response ? error.response.data : error.message);
     }
+
   };
 
   const handleSubmit = (e) => {
