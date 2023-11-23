@@ -49,8 +49,8 @@ export default function CensusFormPage() {
     };
 
     try {
-      const response = await axios.post(`/api/forms/save`, { ecn, ...formData });
-      const stateChange = await axios.post('/api/forms/submit', { ecn });
+      const response = await axios.post(`/api/forms/save`, { ecn: ecn, formData });
+      const stateChange = await axios.post('/api/forms/submit', { ecn: ecn });
       console.log(response.data.message);
     } catch (error) {
       console.error('Hubo un problema al guardar los datos del formulario:', error.response ? error.response.data : error.message);
