@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React from "react";
 import Footer from "../components/Footer";
 import NavBarHome from "../components/NavBarHome";
@@ -20,7 +21,7 @@ export default function CensusFormPage() {
   const [calificacionExperiencia, setCalificacionExperiencia] = useState("");
   const [comentarios, setComentarios] = useState("");
 
-  const handleEnviarFormulario = () => {
+  const handleEnviarFormulario = async () => {
     const formData = {
       npersonas: numeroPersonas,
 
@@ -43,10 +44,14 @@ export default function CensusFormPage() {
         Comentarios: comentarios
       }
     };
-
-    console.log(formData); // Solo para verificar en la consola
+  
+    try {
+      const response = await axios.post(`/api/forms/save`, { ECN: "miau", ...formData }); //ecn en miau
+      console.log(response.data.message);
+    } catch (error) {
+      console.error('There was a problem saving the form data:', error.response ? error.response.data : error.message);
+    }
   };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     handleEnviarFormulario();
