@@ -41,7 +41,8 @@ export default function CensusFormPage() {
     };
 
     try {
-      const response = await axios.post(`/api/forms/save`, { ECN: "miau", ...formData });
+      const response = await axios.post(`/api/forms/save`, { ecn: "miau", ...formData });
+      const stateChange = await axios.post('/api/forms/submit', { ecn: "miau"})
       console.log(response.data.message);
     } catch (error) {
       console.error('There was a problem saving the form data:', error.response ? error.response.data : error.message);

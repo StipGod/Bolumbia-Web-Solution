@@ -12,10 +12,12 @@ export default function Login() {
         event.preventDefault();
 
         try {
-            const response = await axios.post('/api/auth/login', { cfn, ecn });
+            const response = await axios.post('/api/auth/login', { cfn: cfn, ecn : ecn });
             console.log(response.data);
 
             if (response.status === 200) {
+                const stateChange = await axios.post('/api/form/start', { ecn: ecn });
+                console.log(stateChange.data);
                 navigate(`/census-form?ECN=${encodeURIComponent(ecn)}`);
             }
         } catch (error) {

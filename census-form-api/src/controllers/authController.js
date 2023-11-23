@@ -27,7 +27,7 @@ exports.login = async (req, res) => {
     }
 
     // devuelve todo el censusform
-    res.status(200).json({ message: 'Authenticated successfully.', form: result.rows[0] });
+    res.status(200).json({ message: 'Authenticated successfully.'});
   } catch (error) {
     console.error(error.message);
     res.status(500).send('Server error');
