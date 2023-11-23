@@ -33,11 +33,11 @@ exports.getForm = async (req, res) => {
     try {
       const updateQuery = `
         UPDATE "CensusForm"
-        SET "CensusData" = $1
-        WHERE "ECN" = $2`;
+        SET "CensusData" = $1, "State" = 'R'
+        WHERE "ECN" = $2;`;
       
       const result = await pool.query(updateQuery, [censusData, ecn]);
-  
+
       if (result.rowCount === 0) {
         return res.status(404).json({ message: 'Form with the provided ECN not found' });
       }
