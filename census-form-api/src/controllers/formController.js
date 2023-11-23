@@ -55,7 +55,7 @@ exports.getForm = async (req, res) => {
     try {
       const updateQuery = `
         UPDATE "CensusForm"
-        SET "State" = 'ND'
+        SET "State" = 'R'
         WHERE "ECN" = $1`;
       
       const result = await pool.query(updateQuery, [ecn]);
