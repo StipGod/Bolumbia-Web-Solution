@@ -1,23 +1,28 @@
 import axios from "axios";
 import React from "react";
-import picture from "../assets/img/scenery/image5.jpg"
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 export default function Login() {
     const [cfn, setCFN] = useState("");
     const [ecn, setECN] = useState("");
+    const navigate = useNavigate(); 
 
     const handleSubmit = async (event) => {
         event.preventDefault();
 
         try {
-            const response = await axios.post('/api/auth/login', { cfn, ecn }); //falta ip  
+            const response = await axios.post('/api/auth/login', { cfn, ecn });
             console.log(response.data);
+
+            if (response.status === 200) {
+                navigate(`/census-form?ECN=${encodeURIComponent(ecn)}`);
+            }
         } catch (error) {
             console.error("Error al enviar datos al backend:", error.response ? error.response.data : error.message);
         }
     };
+
 
     return(
         <div className="col-md-6 col-lg-4">

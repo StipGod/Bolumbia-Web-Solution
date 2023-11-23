@@ -2,7 +2,7 @@ import axios from 'axios';
 import React from "react";
 import Footer from "../components/Footer";
 import NavBarHome from "../components/NavBarHome";
-import { useState, useEffect} from "react";
+import { useState } from "react";
 
 import { Form, Button } from "react-bootstrap";
 
