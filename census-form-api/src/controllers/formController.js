@@ -23,17 +23,51 @@ exports.getForm = async (req, res) => {
   };
   
   exports.saveForm = async (req, res) => {
-    
-    // guardar la informacion que se lleva hasta el momento, aunque no haya completado todo el form
+    const { ecn } = req.body; 
+    const { censusData } = req.body; 
   
-    res.send('Form saved successfully');
+    if (!censusData) {
+      return res.status(400).json({ message: 'No census data provided' });
+    }
+  
+    try {
+      const updateQuery = `
+        UPDATE "CensusForm"
+        SET "CensusData" = $1
+        WHERE "ECN" = $2`;
+      
+      const result = await pool.query(updateQuery, [censusData, ecn]);
+  
+      if (result.rowCount === 0) {
+        return res.status(404).json({ message: 'Form with the provided ECN not found' });
+      }
+  
+      res.status(200).json({ message: 'Form updated successfully' });
+    } catch (error) {
+      console.error(error.message);
+      res.status(500).send('Server error');
+    }
   };
   
   exports.submitForm = async (req, res) => {
-    
-    // se hace el envio del form, y el usuario se marca como que 
-    // ya completo el censo, no podra abrir mas censos
+    const { ecn } = req.body;
+
+    try {
+      const updateQuery = `
+        UPDATE "CensusForm"
+        SET "State" = 'ND'
+        WHERE "ECN" = $1`;
+      
+      const result = await pool.query(updateQuery, [ecn]);
   
-    res.send('Form submitted successfully');
+      if (result.rowCount === 0) {
+        return res.status(404).json({ message: 'Form with the provided ECN not found or is already completed' });
+      }
+  
+      res.status(200).json({ message: 'Form submitted successfully' });
+    } catch (error) {
+      console.error(error.message);
+      res.status(500).send('Server error');
+    }
   };
   
