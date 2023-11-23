@@ -1,44 +1,42 @@
 import React from "react";
 import Footer from "../components/Footer";
 import NavBarHome from "../components/NavBarHome";
-import { useState, useEffect } from "react";
+import { useState,  } from "react";
 
 import { Form, Button } from "react-bootstrap";
+
 export default function CensusFormPage() {
   const [numeroPersonas, setNumeroPersonas] = useState(0);
   const [adicionales, setAdicionales] = useState("");
   const [estadoCasa, setEstadoCasa] = useState("");
   const [telefono, setTelefono] = useState(0);
-  const [personas, setPersonas] = useState([]);
+  const [nombre, setNombre] = useState("");
+  const [apellido, setApellido] = useState("");
+  const [sexo, setSexo] = useState("");
+  const [edad, setEdad] = useState("");
+  const [fechaNacimiento, setFechaNacimiento] = useState("");
+  const [origen, setOrigen] = useState("");
+  const [raza, setRaza] = useState("");
   const [calificacionExperiencia, setCalificacionExperiencia] = useState("");
   const [comentarios, setComentarios] = useState("");
-
-  useEffect(() => {
-    setPersonas(Array.from({ length: numeroPersonas }, (_, index) => ({
-      nombre: "",
-      apellido: "",
-      sexo: "",
-      edad: "",
-      fechaNacimiento: "",
-      origen: ""
-    })));
-  }, [numeroPersonas]);
 
   const handleEnviarFormulario = () => {
     const formData = {
       npersonas: numeroPersonas,
+
       "General section": {
         "Ocupantes adicionales": adicionales,
         "Estado de la casa": estadoCasa,
         "numero de telefono": telefono
       },
-      "Personal section": personas.map((persona, index) => ({
-        [`Nombre_p${index + 1}`]: persona.nombre,
-        [`Apellido_p${index + 1}`]: persona.apellido,
-        [`sexo_p${index + 1}`]: persona.sexo,
-        [`edad_p${index + 1}`]: persona.edad,
-        [`origen_p${index + 1}`]: persona.origen,
-        [`fechaNacimiento_p${index + 1}`]: persona.fechaNacimiento
+      "Personal section": Array.from({ length: numeroPersonas }, (_, index) => ({
+        [`Nombre_p${index + 1}`]: nombre,
+        [`Apellido_p${index + 1}`]: apellido,
+        [`sexo_p${index + 1}`]: sexo,
+        [`edad_p${index + 1}`]: edad,
+        [`origen_p${index + 1}`]: origen,
+        [`raza_p${index + 1}`]: raza,
+        [`fechaNacimiento_p${index + 1}`]: fechaNacimiento
       })),
       "Feedback section": {
         calificacionExperiencia: calificacionExperiencia,
@@ -47,17 +45,6 @@ export default function CensusFormPage() {
     };
 
     console.log(formData); // Solo para verificar en la consola
-  };
-
-  const handlePersonaChange = (index, campo, valor) => {
-    setPersonas((personasPrevias) => {
-      const personasActualizadas = [...personasPrevias];
-      personasActualizadas[index] = {
-        ...personasActualizadas[index],
-        [campo]: valor
-      };
-      return personasActualizadas;
-    });
   };
 
   const handleSubmit = (e) => {
@@ -181,18 +168,16 @@ export default function CensusFormPage() {
                   <br></br>
                   <Form.Group controlId="infoPersona">
                     <Form.Label>Nombre completo</Form.Label>
-                    <Form.Control
-                      type="text"
-                      placeholder={`Nombre(s) de la Persona ${index + 1}`}
-                      value={personas[index].nombre}
-                      onChange={(e) => handlePersonaChange(index, 'nombre', e.target.value)}
-                    />
-                    <Form.Control
-                      type="text"
+                    <Form.Control 
+                      type="text" 
+                      placeholder={`Nombre(s) de la Persona ${index + 1}`} 
+                      value={nombre}
+                      onChange={(e) => setNombre(e.target.value)}/>
+                    <Form.Control 
+                      type="text" 
                       placeholder={`Apellido(s) de la Persona ${index + 1}`}
-                      value={personas[index].apellido}
-                      onChange={(e) => handlePersonaChange(index, 'apellido', e.target.value)}
-                    />
+                      value={apellido}
+                      onChange={(e) => setApellido(e.target.value)}/>
                   </Form.Group>
                   <br></br>
                   <Form.Group controlId="sexoPersona">
@@ -201,19 +186,19 @@ export default function CensusFormPage() {
                       type="radio"
                       name={`sexoPersona${index + 1}`}
                       label="Femenino"
-                      onChange={(e) => handlePersonaChange(index, 'sexo', 'Femenino')}
+                      onChange={(e) => setSexo("Femenino")}
                     />
                     <Form.Check
                       type="radio"
                       name={`sexoPersona${index + 1}`}
                       label="Masculino"
-                      onChange={(e) => handlePersonaChange(index, 'sexo', 'Masculino')}
+                      onChange={(e) => setSexo("Masculino")}
                     />
                     <Form.Check
                       type="radio"
                       name={`sexoPersona${index + 1}`}
                       label="Otro"
-                      onChange={(e) => handlePersonaChange(index, 'sexo', 'Otro')}
+                      onChange={(e) => setSexo("Otro")}
                     />
                   </Form.Group>
                   <br></br>
@@ -222,15 +207,13 @@ export default function CensusFormPage() {
                     <Form.Control
                       type="number"
                       placeholder="Edad en noviembre 20, 2023"
-                      value={personas[index].edad}
-                      onChange={(e) => handlePersonaChange(index, 'edad', e.target.value)}
-                    />
+                      value={edad}
+                      onChange={(e) => setEdad(e.target.value)}/>
                     <Form.Control
                       type="date" 
                       placeholder="Fecha de nacimiento"
-                      value={personas[index].fechaNacimiento}
-                      onChange={(e) => handlePersonaChange(index, 'fechaNacimiento', e.target.value)}
-                    />
+                      value={fechaNacimiento}
+                      onChange={(e) => setFechaNacimiento(e.target.value)}/>
                   </Form.Group>
                   <br></br>
                   <Form.Group controlId="origen">
@@ -239,31 +222,31 @@ export default function CensusFormPage() {
                       type="radio"
                       name={`origenPersona${index + 1}`}
                       label="No, no es de origen hispano, latino o español"
-                      onChange={(e) => handlePersonaChange(index, 'origen', 'No, no es de origen hispano, latino o español')}
+                      onChange={(e) => setOrigen("No, no es de origen hispano, latino o español")}
                     />
                     <Form.Check
                       type="radio"
                       name={`origenPersona${index + 1}`}
                       label="Sí, mexicano, mexicano americano, chicano"
-                      onChange={(e) => handlePersonaChange(index, 'origen', 'Sí, mexicano, mexicano americano, chicano')}
+                      onChange={(e) => setOrigen("Sí, mexicano, mexicano americano, chicano")}
                     />
                     <Form.Check
                       type="radio"
                       name={`origenPersona${index + 1}`}
                       label="Sí, puertorriqueño"
-                      onChange={(e) => handlePersonaChange(index, 'origen', 'Sí, puertorriqueño')}
+                      onChange={(e) => setOrigen("Sí, puertorriqueño")}
                     />
                     <Form.Check
                       type="radio"
                       name={`origenPersona${index + 1}`}
                       label="Sí, cubano"
-                      onChange={(e) => handlePersonaChange(index, 'origen', 'Sí, cubano')}
+                      onChange={(e) => setOrigen("Sí, cubano")}
                     />
                     <Form.Check
                       type="radio"
                       name={`origenPersona${index + 1}`}
                       label="Sí, otro"
-                      onChange={(e) => handlePersonaChange(index, 'origen', 'Sí, otro')}
+                      onChange={(e) => setOrigen("Sí, otro")}
                     />
                   </Form.Group>
                   <br></br>

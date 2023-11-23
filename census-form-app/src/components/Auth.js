@@ -1,40 +1,69 @@
 import React from "react";
 import picture from "../assets/img/scenery/image5.jpg"
 import { Link } from "react-router-dom";
-
+import { useState } from "react";
 
 export default function Login() {
+    const [cfn, setCFN] = useState("");
+    const [ecn, setECN] = useState("");
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+
+        fetch("URL_DEL_BACKEND", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ cfn, ecn }),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+            })
+            .catch((error) => {
+                console.error("Error al enviar datos al backend:", error);
+            });
+    };
+
     return(
         <div className="col-md-6 col-lg-4">
             <div className="card" style={{boxShadow: '0px 2px 8px'}}>
                 <div className="card-body">
                     <h3 className="card-title">¿Desea llenar el formulario?</h3>
                     <p className="card-text">Para iniciar sesión en el sistema, debe ingresar su CFN y ECN</p>
-                    <form style={{ borderTopColor: "var(--bs-emphasis-color)" }}>
+                    <form
+                        style={{ borderTopColor: "var(--bs-emphasis-color)" }}
+                        onSubmit={handleSubmit}
+                    >
                     <div className="mb-3">
-                        <label className="form-label" for="email">
-                        CFN
+                        <label className="form-label" htmlFor="CFN">
+                            CFN
                         </label>
                         <input
-                        className="form-control item"
-                        type="CFN"
-                        id="CFN"
-                        name="CFN"
-                        data-bs-theme="light"
+                            className="form-control item"
+                            type="text"
+                            id="CFN"
+                            name="CFN"
+                            value={cfn}
+                            onChange={(e) => setCFN(e.target.value)}
+                            data-bs-theme="light"
                         />
                     </div>
                     <div className="mb-3">
-                        <label className="form-label" for="password">
-                        ECN
-                        </label>
-                        <input
-                        className="form-control"
-                        type="ECN"
-                        id="ECN"
-                        name="ECN"
-                        data-bs-theme="light"
-                        />
-                    </div>
+                            <label className="form-label" htmlFor="ECN">
+                                ECN
+                            </label>
+                            <input
+                                className="form-control"
+                                type="text"
+                                id="ECN"
+                                name="ECN"
+                                value={ecn}
+                                onChange={(e) => setECN(e.target.value)}
+                                data-bs-theme="light"
+                            />
+                    </div>    
                     <div
                         className="justify-content-center align-items-center"
                         style={{
@@ -59,7 +88,7 @@ export default function Login() {
                         className="justify-content-center align-items-center"
                         style={{ display: "flex", margin: "15px 0" }}
                     >
-                        <Link className="txt2" to="/census-form">
+                        <Link className="txt2" to="/soporte">
                         No tienes un código? Ingresa aquí
                         </Link>
                     </div>
