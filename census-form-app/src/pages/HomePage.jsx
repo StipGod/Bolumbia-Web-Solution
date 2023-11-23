@@ -34,8 +34,16 @@ export default function Home() {
               <TarjetasHome />              
               <div className="col-md-8" style={{padding: "0px 0px 0px 50px"}}>
                 <h1>Información del censo</h1>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc quam urna, dignissim nec auctor in.
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <p>El Censo de Población y Vivienda de Bolumbia es la mayor recopilación estadística realizada por el DoS 
+                  (Departamento de estadísticas) y una de las más importantes. Su objetivo es medir con precisión el número y las 
+                  características clave de las personas que se encuentran en Bolumbia en la Noche del Censo (Census Night) y de las 
+                  viviendas en las que viven. Esta información proporciona una base confiable para estimar la población de cada una 
+                  de las provincias y áreas de gobierno local, la cual es utilizada principalmente con fines electorales y para 
+                  planificar la distribución de fondos gubernamentales. Los datos del censo también son utilizados por personas y 
+                  organizaciones de los sectores público y privado para tomar decisiones informadas sobre cuestiones de política y 
+                  planificación que impactan las vidas de todos los habitantes de Bolumbia. Todos en Bolumbia están obligados legalmente 
+                  a completar el formulario del censo, con el fin de garantizar que los datos recolectados brindan una imagen precisa y 
+                  completa de la nación.</p>
               </div>
             </div>
             <div className="row">
