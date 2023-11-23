@@ -1,14 +1,71 @@
 import React from "react";
 import Footer from "../components/Footer";
 import NavBarHome from "../components/NavBarHome";
-import CensusForm from "../components/CensusForm";
-import CensusForm1 from "../components/CensusForm1";
+import { useState, useEffect } from "react";
 
 import { Form, Button } from "react-bootstrap";
-
 export default function CensusFormPage() {
+  const [numeroPersonas, setNumeroPersonas] = useState(0);
+  const [adicionales, setAdicionales] = useState("");
+  const [estadoCasa, setEstadoCasa] = useState("");
+  const [telefono, setTelefono] = useState(0);
+  const [personas, setPersonas] = useState([]);
+  const [calificacionExperiencia, setCalificacionExperiencia] = useState("");
+  const [comentarios, setComentarios] = useState("");
+
+  useEffect(() => {
+    setPersonas(Array.from({ length: numeroPersonas }, (_, index) => ({
+      nombre: "",
+      apellido: "",
+      sexo: "",
+      edad: "",
+      fechaNacimiento: "",
+      origen: ""
+    })));
+  }, [numeroPersonas]);
+
+  const handleEnviarFormulario = () => {
+    const formData = {
+      npersonas: numeroPersonas,
+      "General section": {
+        "Ocupantes adicionales": adicionales,
+        "Estado de la casa": estadoCasa,
+        "numero de telefono": telefono
+      },
+      "Personal section": personas.map((persona, index) => ({
+        [`Nombre_p${index + 1}`]: persona.nombre,
+        [`Apellido_p${index + 1}`]: persona.apellido,
+        [`sexo_p${index + 1}`]: persona.sexo,
+        [`edad_p${index + 1}`]: persona.edad,
+        [`origen_p${index + 1}`]: persona.origen,
+        [`fechaNacimiento_p${index + 1}`]: persona.fechaNacimiento
+      })),
+      "Feedback section": {
+        calificacionExperiencia: calificacionExperiencia,
+        Comentarios: comentarios
+      }
+    };
+
+    console.log(formData); // Solo para verificar en la consola
+  };
+
+  const handlePersonaChange = (index, campo, valor) => {
+    setPersonas((personasPrevias) => {
+      const personasActualizadas = [...personasPrevias];
+      personasActualizadas[index] = {
+        ...personasActualizadas[index],
+        [campo]: valor
+      };
+      return personasActualizadas;
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    handleEnviarFormulario();
+  };
+  
   return (
-    
     <>
       <NavBarHome />
       <main className="page service-page" style={{ background: "var(--bs-body-bg)" }}>
@@ -43,80 +100,208 @@ export default function CensusFormPage() {
               <br></br> 
               <Form.Group controlId="numeroPersonasHabitando">
                 <Form.Label>1. ¿Cuántas personas viven o se quedan a dormir en esta casa el 20 de noviembre del 2023?</Form.Label>
-                <Form.Control type="number" placeholder="Número de personas" />
+                <Form.Control
+                  type="number"
+                  placeholder="Número de personas"
+                  value={numeroPersonas}
+                  onChange={(e) => setNumeroPersonas(parseInt(e.target.value))}
+                />
               </Form.Group>
               <br></br>
               <Form.Group controlId="personasAdicionales">
                 <Form.Label>2. ¿Hubo personas adicionales que se quedaron aquí el 1 de abril de 2020 que no incluyó en la Pregunta 1? Marque todas las respuestas que considere</Form.Label>
-                <Form.Check type="checkbox" label="Bebés recién nacidos, nietos o hijos adoptivos"  />
-                <Form.Check type="checkbox" label="Parientes, como hijos adultos, primos o suegros" />
-                <Form.Check type="checkbox" label="No familiares, como compañeros de cuarto, niñeras residente" />
-                <Form.Check type="checkbox" label="Personas que se quedan aquí temporalmente" />
-                <Form.Check type="checkbox" label="No hay personas adicionales" />
+                <Form.Check
+                  type="checkbox"
+                  label="Bebés recién nacidos, nietos o hijos adoptivos"
+                  onChange={(e) => setAdicionales((prevState) => prevState + "Bebés recién nacidos, nietos o hijos adoptivos, ")}
+                />
+                <Form.Check
+                  type="checkbox"
+                  label="Parientes, como hijos adultos, primos o suegros"
+                  onChange={(e) => setAdicionales((prevState) => prevState + "Parientes, como hijos adultos, primos o suegros, ")}
+                />
+                <Form.Check
+                  type="checkbox"
+                  label="No familiares, como compañeros de cuarto, niñeras residente"
+                  onChange={(e) => setAdicionales((prevState) => prevState + "No familiares, como compañeros de cuarto, niñeras residente, ")}
+                />
+                <Form.Check
+                  type="checkbox"
+                  label="Personas que se quedan aquí temporalmente"
+                  onChange={(e) => setAdicionales((prevState) => prevState + "Personas que se quedan aquí temporalmente, ")}
+                />
+                <Form.Check
+                  type="checkbox"
+                  label="No hay personas adicionales"
+                  onChange={(e) => setAdicionales("No hay personas adicionales")}
+                />
               </Form.Group>
               <br></br>
               <Form.Group controlId="numeroPersonasHabitando1">
-                <Form.Label>3.  Su casa es </Form.Label>
-                <Form.Check type="radio" name="opciones" label="Es propiedad de usted o de alguien de este hogar con una hipoteca o préstamo"  />
-                <Form.Check type="radio" name="opciones" label="Es totalmente de su propiedad o de alguien de este hogar, es decir que no le deben nada de la casa a nadie (sin hipoteca ni préstamo)" />
-                <Form.Check type="radio" name="opciones" label="Arrendada" />
-                <Form.Check type="radio" name="opciones" label="Habitada, pero sin pagar arriendo (usted ni nadie que vive ahí es el propietario)" />
+                <Form.Label>3. Su casa es</Form.Label>
+                <Form.Check
+                  type="radio"
+                  name="opciones"
+                  label="Es propiedad de usted o de alguien de este hogar con una hipoteca o préstamo"
+                  onChange={(e) => setEstadoCasa("Es propiedad de usted o de alguien de este hogar con una hipoteca o préstamo")}
+                />
+                <Form.Check
+                  type="radio"
+                  name="opciones"
+                  label="Es totalmente de su propiedad o de alguien de este hogar, es decir que no le deben nada de la casa a nadie (sin hipoteca ni préstamo)"
+                  onChange={(e) => setEstadoCasa("Es totalmente de su propiedad o de alguien de este hogar, es decir que no le deben nada de la casa a nadie (sin hipoteca ni préstamo)")}
+                />
+                <Form.Check
+                  type="radio"
+                  name="opciones"
+                  label="Arrendada"
+                  onChange={(e) => setEstadoCasa("Arrendada")}
+                />
+                <Form.Check
+                  type="radio"
+                  name="opciones"
+                  label="Habitada, pero sin pagar arriendo (usted ni nadie que vive ahí es el propietario)"
+                  onChange={(e) => setEstadoCasa("Habitada, pero sin pagar arriendo (usted ni nadie que vive ahí es el propietario)")}
+                />
               </Form.Group>
               <br></br>
               <Form.Group controlId="celular">
                 <Form.Label>4. Cuál es su celular?  (Solo lo contactaremos para temas relacionados con el Censo)</Form.Label>
-                <Form.Control type="number" placeholder="Número celular" />
+                <Form.Control 
+                  type="number" 
+                  placeholder="Número celular"
+                  value={telefono}
+                  onChange={(e) => setTelefono(e.target.value)}/>
               </Form.Group>
               <br></br>
-              <Form.Group controlId="infoPersona">
-                <Form.Label>5. Proporcione información de cada persona que vive aquí. Si hay alguien que vive aquí y que paga el alquiler o es propietario de esta residencia, comience por incluirlo como Persona 1. Si el propietario o la persona que paga el alquiler no vive aquí, comience por incluir a cualquier adulto que viva aquí como Persona 1</Form.Label>
-                <Form.Control type="text" placeholder="Nombre(s) de la Persona 1" />
-                <Form.Control type="text" placeholder="Apellido(s) de la Persona 1" />
+              <Form.Label>5. Proporcione información de cada persona que vive aquí. Si hay alguien que vive aquí y que paga el alquiler o es propietario de esta residencia, comience por incluirlo como Persona 1. Si el propietario o la persona que paga el alquiler no vive aquí, comience por incluir a cualquier adulto que viva aquí como Persona 1</Form.Label>
+              {Array.from({ length: numeroPersonas }, (_, index) => (
+                <Form.Group key={index} controlId={`infoPersona${index + 1}`}>
+                  <Form.Label>{`Datos de la Persona ${index + 1}`}</Form.Label>
+                  <br></br>
+                  <Form.Group controlId="infoPersona">
+                    <Form.Label>Nombre completo</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder={`Nombre(s) de la Persona ${index + 1}`}
+                      value={personas[index].nombre}
+                      onChange={(e) => handlePersonaChange(index, 'nombre', e.target.value)}
+                    />
+                    <Form.Control
+                      type="text"
+                      placeholder={`Apellido(s) de la Persona ${index + 1}`}
+                      value={personas[index].apellido}
+                      onChange={(e) => handlePersonaChange(index, 'apellido', e.target.value)}
+                    />
+                  </Form.Group>
+                  <br></br>
+                  <Form.Group controlId="sexoPersona">
+                    <Form.Label>{`¿Cuál es el sexo de la Persona ${index + 1}?`}</Form.Label>
+                    <Form.Check
+                      type="radio"
+                      name={`sexoPersona${index + 1}`}
+                      label="Femenino"
+                      onChange={(e) => handlePersonaChange(index, 'sexo', 'Femenino')}
+                    />
+                    <Form.Check
+                      type="radio"
+                      name={`sexoPersona${index + 1}`}
+                      label="Masculino"
+                      onChange={(e) => handlePersonaChange(index, 'sexo', 'Masculino')}
+                    />
+                    <Form.Check
+                      type="radio"
+                      name={`sexoPersona${index + 1}`}
+                      label="Otro"
+                      onChange={(e) => handlePersonaChange(index, 'sexo', 'Otro')}
+                    />
+                  </Form.Group>
+                  <br></br>
+                  <Form.Group controlId="edadNacimiento">
+                    <Form.Label>{`¿Cuál es la edad y la fecha de nacimiento de la Persona ${index + 1}? (Para bebés menores de 1 año, no escriba la edad en meses, escríbala en años como 0)`} </Form.Label>
+                    <Form.Control
+                      type="number"
+                      placeholder="Edad en noviembre 20, 2023"
+                      value={personas[index].edad}
+                      onChange={(e) => handlePersonaChange(index, 'edad', e.target.value)}
+                    />
+                    <Form.Control
+                      type="date" 
+                      placeholder="Fecha de nacimiento"
+                      value={personas[index].fechaNacimiento}
+                      onChange={(e) => handlePersonaChange(index, 'fechaNacimiento', e.target.value)}
+                    />
+                  </Form.Group>
+                  <br></br>
+                  <Form.Group controlId="origen">
+                    <Form.Label>{`¿La Persona ${index + 1} es de origen hispano, latino o español?`}</Form.Label>
+                    <Form.Check
+                      type="radio"
+                      name={`origenPersona${index + 1}`}
+                      label="No, no es de origen hispano, latino o español"
+                      onChange={(e) => handlePersonaChange(index, 'origen', 'No, no es de origen hispano, latino o español')}
+                    />
+                    <Form.Check
+                      type="radio"
+                      name={`origenPersona${index + 1}`}
+                      label="Sí, mexicano, mexicano americano, chicano"
+                      onChange={(e) => handlePersonaChange(index, 'origen', 'Sí, mexicano, mexicano americano, chicano')}
+                    />
+                    <Form.Check
+                      type="radio"
+                      name={`origenPersona${index + 1}`}
+                      label="Sí, puertorriqueño"
+                      onChange={(e) => handlePersonaChange(index, 'origen', 'Sí, puertorriqueño')}
+                    />
+                    <Form.Check
+                      type="radio"
+                      name={`origenPersona${index + 1}`}
+                      label="Sí, cubano"
+                      onChange={(e) => handlePersonaChange(index, 'origen', 'Sí, cubano')}
+                    />
+                    <Form.Check
+                      type="radio"
+                      name={`origenPersona${index + 1}`}
+                      label="Sí, otro"
+                      onChange={(e) => handlePersonaChange(index, 'origen', 'Sí, otro')}
+                    />
+                  </Form.Group>
+                  <br></br>
+                </Form.Group>
+              ))}
+              <Form.Group controlId="calificacionExperiencia">
+              <Form.Label>Calificación de la Experiencia:</Form.Label>
+              <Form.Control
+                as="select"
+                value={calificacionExperiencia}
+                onChange={(e) => setCalificacionExperiencia(e.target.value)}
+              >
+                <option value="">Seleccione...</option>
+                <option value="excelente">Excelente</option>
+                <option value="bueno">Bueno</option>
+                <option value="regular">Regular</option>
+                <option value="malo">Malo</option>
+              </Form.Control>
               </Form.Group>
-              <br></br>
-              <Form.Group controlId="sexoPersona">
-                <Form.Label>6. ¿Cuál es el sexo de la Persona 1?</Form.Label>
-                <Form.Check type="radio" name="opciones" label="Femenino"/>
-                <Form.Check type="radio" name="opciones" label="Masculino" />
-                <Form.Check type="radio" name="opciones" label="Otro" />
+              <Form.Group controlId="comentarios">
+                <Form.Label>Comentarios:</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  rows={3}
+                  value={comentarios}
+                  onChange={(e) => setComentarios(e.target.value)}
+                />
               </Form.Group>
-              <br></br>
-              <Form.Group controlId="edadNacimiento">
-                <Form.Label>7. ¿Cuál es la edad y la fecha de nacimiento de la Persona 1? (Para bebés menores de 1 año, no escriba la edad en meses, escríbala en años como 0)</Form.Label>
-                <Form.Control type="number" placeholder="Edad en noviembre 20, 2023" />
-                <Form.Control type="date" placeholder="Fecha de nacimiento" />
-              </Form.Group>
-              <br></br>
-              <Form.Group controlId="origen">
-                <Form.Label>8. ¿La Persona 1 es de origen hispano, latino o español?</Form.Label>
-                <Form.Check type="radio" name="opciones" label="No, no es de origen hispano, latino o español"/>
-                <Form.Check type="radio" name="opciones" label="Sí, mexicano, mexicano americano, chicano" />
-                <Form.Check type="radio" name="opciones" label="Sí, puertorriqueño" />
-                <Form.Check type="radio" name="opciones" label="Sí, cubano" />
-                <Form.Check type="radio" name="opciones" label="Sí, otro" />
-              </Form.Group>
-              <br></br>
-
-              
-              <Button style={{margin: "20px 0px 10px 0px"}} variant="primary" type="submit">
-                Enviar
-              </Button>
-
-
+              <Form onSubmit={handleSubmit}>
+                <Button style={{ margin: "20px 0px 10px 0px" }} variant="primary" type="submit">
+                  Enviar
+                </Button>
+              </Form>
             </Form>
           </div>
         </section>
       </main>
       <Footer />
-
-
-      
-      
-
-
-
-
-
     </>
   );
 }
