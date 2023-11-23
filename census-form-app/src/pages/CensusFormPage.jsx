@@ -2,7 +2,7 @@ import axios from 'axios';
 import React from "react";
 import Footer from "../components/Footer";
 import NavBarHome from "../components/NavBarHome";
-import { useState,  } from "react";
+import { useState, useEffect} from "react";
 
 import { Form, Button } from "react-bootstrap";
 
@@ -11,50 +11,81 @@ export default function CensusFormPage() {
   const [adicionales, setAdicionales] = useState("");
   const [estadoCasa, setEstadoCasa] = useState("");
   const [telefono, setTelefono] = useState(0);
-  const [nombre, setNombre] = useState("");
-  const [apellido, setApellido] = useState("");
-  const [sexo, setSexo] = useState("");
-  const [edad, setEdad] = useState("");
-  const [fechaNacimiento, setFechaNacimiento] = useState("");
-  const [origen, setOrigen] = useState("");
-  const [raza, setRaza] = useState("");
+
+  const [personas, setPersonas] = useState([]);
+
   const [calificacionExperiencia, setCalificacionExperiencia] = useState("");
   const [comentarios, setComentarios] = useState("");
 
   const handleEnviarFormulario = async () => {
     const formData = {
       npersonas: numeroPersonas,
-
       "General section": {
         "Ocupantes adicionales": adicionales,
         "Estado de la casa": estadoCasa,
         "numero de telefono": telefono
       },
-      "Personal section": Array.from({ length: numeroPersonas }, (_, index) => ({
-        [`Nombre_p${index + 1}`]: nombre,
-        [`Apellido_p${index + 1}`]: apellido,
-        [`sexo_p${index + 1}`]: sexo,
-        [`edad_p${index + 1}`]: edad,
-        [`origen_p${index + 1}`]: origen,
-        [`raza_p${index + 1}`]: raza,
-        [`fechaNacimiento_p${index + 1}`]: fechaNacimiento
+      "Personal section": personas.map((persona, index) => ({
+        [`Nombre_p${index + 1}`]: persona.nombre,
+        [`Apellido_p${index + 1}`]: persona.apellido,
+        [`sexo_p${index + 1}`]: persona.sexo,
+        [`edad_p${index + 1}`]: persona.edad,
+        [`origen_p${index + 1}`]: persona.origen,
+        [`raza_p${index + 1}`]: persona.raza,
+        [`fechaNacimiento_p${index + 1}`]: persona.fechaNacimiento
       })),
       "Feedback section": {
         calificacionExperiencia: calificacionExperiencia,
         Comentarios: comentarios
       }
     };
-  
+
     try {
-      const response = await axios.post(`/api/forms/save`, { ECN: "miau", ...formData }); //ecn en miau
+      const response = await axios.post(`/api/forms/save`, { ECN: "miau", ...formData });
       console.log(response.data.message);
     } catch (error) {
       console.error('There was a problem saving the form data:', error.response ? error.response.data : error.message);
     }
   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     handleEnviarFormulario();
+  };
+
+  const handlePersonaChange = (index, field, value) => {
+    setPersonas((prevPersonas) => {
+      const updatedPersonas = [...prevPersonas];
+      updatedPersonas[index][field] = value;
+      return updatedPersonas;
+    });
+  };
+
+  const handleNumeroPersonasChange = (e) => {
+    const newNumeroPersonas = parseInt(e.target.value);
+    setNumeroPersonas(newNumeroPersonas);
+
+    setPersonas((prevPersonas) => {
+      const updatedPersonas = [...prevPersonas];
+
+      if (newNumeroPersonas < updatedPersonas.length) {
+        updatedPersonas.length = newNumeroPersonas;
+      } else {
+        for (let i = prevPersonas.length; i < newNumeroPersonas; i++) {
+          updatedPersonas.push({
+            nombre: "",
+            apellido: "",
+            sexo: "",
+            edad: "",
+            fechaNacimiento: "",
+            origen: "",
+            raza: ""
+          });
+        }
+      }
+
+      return updatedPersonas;
+    });
   };
   
   return (
@@ -96,7 +127,7 @@ export default function CensusFormPage() {
                   type="number"
                   placeholder="Número de personas"
                   value={numeroPersonas}
-                  onChange={(e) => setNumeroPersonas(parseInt(e.target.value))}
+                  onChange={handleNumeroPersonasChange}
                 />
               </Form.Group>
               <br></br>
@@ -171,19 +202,19 @@ export default function CensusFormPage() {
                 <Form.Group key={index} controlId={`infoPersona${index + 1}`}>
                   <Form.Label>{`Datos de la Persona ${index + 1}`}</Form.Label>
                   <br></br>
-                  <Form.Group controlId="infoPersona">
-                    <Form.Label>Nombre completo</Form.Label>
-                    <Form.Control 
-                      type="text" 
-                      placeholder={`Nombre(s) de la Persona ${index + 1}`} 
-                      value={nombre}
-                      onChange={(e) => setNombre(e.target.value)}/>
-                    <Form.Control 
-                      type="text" 
-                      placeholder={`Apellido(s) de la Persona ${index + 1}`}
-                      value={apellido}
-                      onChange={(e) => setApellido(e.target.value)}/>
-                  </Form.Group>
+                  <Form.Label>Nombre completo</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder={`Nombre(s) de la Persona ${index + 1}`}
+                    value={personas[index].nombre}
+                    onChange={(e) => handlePersonaChange(index, 'nombre', e.target.value)}
+                  />
+                  <Form.Control
+                    type="text"
+                    placeholder={`Apellido(s) de la Persona ${index + 1}`}
+                    value={personas[index].apellido}
+                    onChange={(e) => handlePersonaChange(index, 'apellido', e.target.value)}
+                  />
                   <br></br>
                   <Form.Group controlId="sexoPersona">
                     <Form.Label>{`¿Cuál es el sexo de la Persona ${index + 1}?`}</Form.Label>
@@ -191,19 +222,22 @@ export default function CensusFormPage() {
                       type="radio"
                       name={`sexoPersona${index + 1}`}
                       label="Femenino"
-                      onChange={(e) => setSexo("Femenino")}
+                      checked={personas[index].sexo === "Femenino"}
+                      onChange={(e) => handlePersonaChange(index, 'sexo', "Femenino")}
                     />
                     <Form.Check
                       type="radio"
                       name={`sexoPersona${index + 1}`}
                       label="Masculino"
-                      onChange={(e) => setSexo("Masculino")}
+                      checked={personas[index].sexo === "Masculino"}
+                      onChange={(e) => handlePersonaChange(index, 'sexo', "Masculino")}
                     />
                     <Form.Check
                       type="radio"
                       name={`sexoPersona${index + 1}`}
                       label="Otro"
-                      onChange={(e) => setSexo("Otro")}
+                      checked={personas[index].sexo === "Otro"}
+                      onChange={(e) => handlePersonaChange(index, 'sexo', "Otro")}
                     />
                   </Form.Group>
                   <br></br>
@@ -211,14 +245,16 @@ export default function CensusFormPage() {
                     <Form.Label>{`¿Cuál es la edad y la fecha de nacimiento de la Persona ${index + 1}? (Para bebés menores de 1 año, no escriba la edad en meses, escríbala en años como 0)`} </Form.Label>
                     <Form.Control
                       type="number"
-                      placeholder="Edad en noviembre 20, 2023"
-                      value={edad}
-                      onChange={(e) => setEdad(e.target.value)}/>
+                      placeholder={`Edad de la Persona ${index + 1}`}
+                      value={personas[index].edad}
+                      onChange={(e) => handlePersonaChange(index, 'edad', e.target.value)}
+                    />
                     <Form.Control
-                      type="date" 
-                      placeholder="Fecha de nacimiento"
-                      value={fechaNacimiento}
-                      onChange={(e) => setFechaNacimiento(e.target.value)}/>
+                      type="date"
+                      placeholder={`Fecha de nacimiento de la Persona ${index + 1}`}
+                      value={personas[index].fechaNacimiento}
+                      onChange={(e) => handlePersonaChange(index, 'fechaNacimiento', e.target.value)}
+                    />
                   </Form.Group>
                   <br></br>
                   <Form.Group controlId="origen">
@@ -227,31 +263,68 @@ export default function CensusFormPage() {
                       type="radio"
                       name={`origenPersona${index + 1}`}
                       label="No, no es de origen hispano, latino o español"
-                      onChange={(e) => setOrigen("No, no es de origen hispano, latino o español")}
+                      checked={personas[index].origen === "No, no es de origen hispano, latino o español"}
+                      onChange={(e) => handlePersonaChange(index, 'origen', "No, no es de origen hispano, latino o español")}
                     />
                     <Form.Check
                       type="radio"
                       name={`origenPersona${index + 1}`}
                       label="Sí, mexicano, mexicano americano, chicano"
-                      onChange={(e) => setOrigen("Sí, mexicano, mexicano americano, chicano")}
+                      checked={personas[index].origen === "Sí, mexicano, mexicano americano, chicano"}
+                      onChange={(e) => handlePersonaChange(index, 'origen', "Sí, mexicano, mexicano americano, chicano")}
                     />
                     <Form.Check
                       type="radio"
                       name={`origenPersona${index + 1}`}
                       label="Sí, puertorriqueño"
-                      onChange={(e) => setOrigen("Sí, puertorriqueño")}
+                      checked={personas[index].origen === "Sí, puertorriqueño"}
+                      onChange={(e) => handlePersonaChange(index, 'origen', "Sí, puertorriqueño")}
                     />
                     <Form.Check
                       type="radio"
                       name={`origenPersona${index + 1}`}
                       label="Sí, cubano"
-                      onChange={(e) => setOrigen("Sí, cubano")}
+                      checked={personas[index].origen === "Sí, cubano"}
+                      onChange={(e) => handlePersonaChange(index, 'origen', "Sí, cubano")}
                     />
                     <Form.Check
                       type="radio"
                       name={`origenPersona${index + 1}`}
                       label="Sí, otro"
-                      onChange={(e) => setOrigen("Sí, otro")}
+                      checked={personas[index].origen === "Sí, otro"}
+                      onChange={(e) => handlePersonaChange(index, 'origen', "Sí, otro")}
+                    />
+                  </Form.Group>
+                  <br></br>
+                  <Form.Group controlId="razaPersona">
+                    <Form.Label>{`¿Cuál es la raza de la Persona ${index + 1}?`}</Form.Label>
+                    <Form.Check
+                      type="radio"
+                      name={`razaPersona${index + 1}`}
+                      label="Blanca"
+                      checked={personas[index].raza === "Blanca"}
+                      onChange={(e) => handlePersonaChange(index, 'raza', "Blanca")}
+                    />
+                    <Form.Check
+                      type="radio"
+                      name={`razaPersona${index + 1}`}
+                      label="Negra o afroamericana"
+                      checked={personas[index].raza === "Negra o afroamericana"}
+                      onChange={(e) => handlePersonaChange(index, 'raza', "Negra o afroamericana")}
+                    />
+                    <Form.Check
+                      type="radio"
+                      name={`razaPersona${index + 1}`}
+                      label="Mongólica o amarilla"
+                      checked={personas[index].raza === "Mongólica o amarilla"}
+                      onChange={(e) => handlePersonaChange(index, 'raza', "Mongólica o amarilla")}
+                    />
+                    <Form.Check
+                      type="radio"
+                      name={`razaPersona${index + 1}`}
+                      label="Otro"
+                      checked={personas[index].raza === "Otro"}
+                      onChange={(e) => handlePersonaChange(index, 'raza', "Otro")}
                     />
                   </Form.Group>
                   <br></br>
