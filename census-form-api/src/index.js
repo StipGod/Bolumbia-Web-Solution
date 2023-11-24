@@ -4,6 +4,9 @@ const port = 3001;
 const authRoutes = require('./routes/authRoutes');
 const formRoutes = require('./routes/formRoutes');
 
+const cors = require('cors');
+app.use(cors());
+
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);

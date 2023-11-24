@@ -51,8 +51,8 @@ export default function CensusFormPage() {
     };
 
     try {
-      const response = await axios.post(`/api/forms/save`, { ecn, ...formData });
-      const stateChange = await axios.post('/api/forms/submit', { ecn });
+      const response = await axios.post(`http://localhost:3001/api/forms/save`, { ecn: ecn, formData });
+      const stateChange = await axios.post('http://localhost:3001/api/forms/submit', { ecn: ecn });
       console.log(response.data.message);
     } catch (error) {
       console.error('Hubo un problema al guardar los datos del formulario:', error.response ? error.response.data : error.message);
@@ -209,7 +209,7 @@ export default function CensusFormPage() {
               </Form.Group>
               <br></br>
               <Form.Label>5. Proporcione información de cada persona que vive aquí. Si hay alguien que vive aquí y que paga el alquiler o es propietario de esta residencia, comience por incluirlo como Persona 1. Si el propietario o la persona que paga el alquiler no vive aquí, comience por incluir a cualquier adulto que viva aquí como Persona 1</Form.Label>
-              {Array.from({ length: numeroPersonas }, (_, index) => (
+              {Array.from({ length: numeroPersonas }).map((_, index) => (
                 <Form.Group key={index} controlId={`infoPersona${index + 1}`}>
                   <Form.Label>{`Datos de la Persona ${index + 1}`}</Form.Label>
                   <br></br>

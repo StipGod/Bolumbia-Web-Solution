@@ -8,22 +8,22 @@ exports.login = async (req, res) => {
     const ecnCheck = 'SELECT "CensusData" FROM "CensusForm" WHERE "ECN" = $1 AND "state" != $2'; 
     const check = await pool.query(ecnCheck, [ecn, 'R']);
     
-    if (result.rows.length === 0) {
+    if (check.rows.length === 0) {
       return res.status(404).json({ message: 'ECN not found or form already completed' });
     }
 
     const query = `
-    SELECT cf.*
-    FROM "CensusForm" cf
-    INNER JOIN "PrivateDwelling" pd ON cf."ECN" = pd."CensusCollector_CWL"
-    INNER JOIN "CensusRespondent" cr ON pd."PD_id" = cr."PrivateDwelling_PD_id"
-    WHERE cf."ECN" = $1 AND pd."CFN" = $2;
+    SELECT pd."CFN"
+    FROM public."PrivateDwelling" pd
+    JOIN public."CensusRespondent" cr ON pd."PD_id" = cr."PrivateDwelling_PD_id"
+    JOIN public."CensusForm" cf ON cr."CensusForm_ECN" = cf."ECN"
+    WHERE cf."ECN" = $1;
       `;
-    const values = [ecn, cfn];
+    const values = [ecn];
 
     const result = await pool.query(query, values);
-
-    if (result.rows.length === 0) {
+    
+    if (result.rows[0].CFN != cfn) {
       return res.status(404).json({ message: 'Census Form not found with provided ECN and CFN.' });
     }
 

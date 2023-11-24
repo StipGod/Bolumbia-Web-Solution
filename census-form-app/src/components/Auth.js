@@ -10,10 +10,15 @@ export default function Login() {
   
     const handleSubmit = async (event) => {
         event.stopPropagation();
+        event.preventDefault();
   
       try {
         console.log('Submitting form...');
-        const response = await axios.post('http://localhost:3001/api/auth/login', { cfn, ecn });
+        const response = await axios.post('http://localhost:3001/api/auth/login', { cfn, ecn }, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
         console.log('Respuesta del login:', response.data);
       
         if (response.status === 200) {
