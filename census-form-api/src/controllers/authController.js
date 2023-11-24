@@ -2,6 +2,7 @@ const pool = require('../db');
 
 exports.login = async (req, res) => {
   try {
+    console.log("hola");
     const { ecn, cfn } = req.body;
     
     const ecnCheck = 'SELECT "CensusData" FROM "CensusForm" WHERE "ECN" = $1 AND "state" != $2'; 
@@ -21,7 +22,7 @@ exports.login = async (req, res) => {
     const values = [ecn];
 
     const result = await pool.query(query, values);
-    
+
     if (result.rows[0].CFN != cfn) {
       return res.status(404).json({ message: 'Census Form not found with provided ECN and CFN.' });
     }
