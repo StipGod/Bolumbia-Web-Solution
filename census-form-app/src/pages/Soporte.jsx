@@ -1,6 +1,5 @@
 import NavBarHome from "../components/NavBarHome"
 import Footer from "../components/Footer"
-import { Form, Button } from "react-bootstrap";
 
 
 export default function Soporte() {

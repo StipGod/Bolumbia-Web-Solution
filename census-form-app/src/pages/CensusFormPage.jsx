@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { useLocation } from 'react-router-dom';
 
 import { Form, Button } from "react-bootstrap";
+import { useLocation } from 'react-router';
 
 export default function CensusFormPage() {
   const location = useLocation();
@@ -13,7 +14,6 @@ export default function CensusFormPage() {
   const [adicionales, setAdicionales] = useState("");
   const [estadoCasa, setEstadoCasa] = useState("");
   const [telefono, setTelefono] = useState(0);
-
   const [personas, setPersonas] = useState([]);
 
   const [calificacionExperiencia, setCalificacionExperiencia] = useState("");

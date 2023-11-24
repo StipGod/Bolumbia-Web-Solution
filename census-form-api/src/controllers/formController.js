@@ -88,7 +88,7 @@ exports.getForm = async (req, res) => {
         return res.status(404).json({ message: 'Form with the provided ECN not found or is already completed' });
       }
   
-      res.status(200).json({ message: 'Form submitted successfully' });
+      res.status(200).json({ message: 'Form started successfully' });
     } catch (error) {
       console.error(error.message);
       res.status(500).send('Server error');
