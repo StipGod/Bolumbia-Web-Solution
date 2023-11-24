@@ -2,11 +2,13 @@ import axios from 'axios';
 import React from "react";
 import Footer from "../components/Footer";
 import NavBarHome from "../components/NavBarHome";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocation } from 'react-router-dom';
 
 import { Form, Button } from "react-bootstrap";
 
 export default function CensusFormPage() {
+  const location = useLocation();
   const [numeroPersonas, setNumeroPersonas] = useState(0);
   const [adicionales, setAdicionales] = useState("");
   const [estadoCasa, setEstadoCasa] = useState("");
@@ -55,7 +57,6 @@ export default function CensusFormPage() {
     } catch (error) {
       console.error('Hubo un problema al guardar los datos del formulario:', error.response ? error.response.data : error.message);
     }
-
   };
 
   const handleSubmit = (e) => {

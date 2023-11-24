@@ -1,30 +1,36 @@
 import axios from "axios";
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate} from "react-router-dom";
 import { useState } from "react";
 
 export default function Login() {
     const [cfn, setCFN] = useState("");
     const [ecn, setECN] = useState("");
-    const navigate = useNavigate(); 
-
+    const navigate = useNavigate();
+  
     const handleSubmit = async (event) => {
-        event.preventDefault();
-
-        try {
-            const response = await axios.post('/api/auth/login', { cfn: cfn, ecn : ecn });
-            console.log(response.data);
-
-            if (response.status === 200) {
-                const stateChange = await axios.post('/api/form/start', { ecn: ecn });
-                console.log(stateChange.data);
-                navigate(`/census-form?ECN=${encodeURIComponent(ecn)}`);
-            }
-        } catch (error) {
-            console.error("Error al enviar datos al backend:", error.response ? error.response.data : error.message);
+        event.stopPropagation();
+  
+      try {
+        console.log('Submitting form...');
+        const response = await axios.post('http://localhost:3001/api/auth/login', { cfn, ecn });
+        console.log('Respuesta del login:', response.data);
+      
+        if (response.status === 200) {
+          const stateChange = await axios.post('http://localhost:3001/api/form/start', { ecn });
+          console.log('Respuesta del inicio del formulario:', stateChange.data);
+      
+          if (stateChange.status === 200) {
+            navigate(`/census-form?ECN=${encodeURIComponent(ecn)}`);
+            console.log('Navigate to census form');
+          } else {
+            console.error("Error al iniciar el formulario:", stateChange.data);
+          }
         }
+      } catch (error) {
+        console.error("Error al enviar datos al backend:", error.response ? error.response.data : error.message);
+      }      
     };
-
 
     return(
         <div className="col-md-6 col-lg-4">
