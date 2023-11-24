@@ -6,7 +6,6 @@ import { useState, useEffect } from "react";
 import { useLocation } from 'react-router-dom';
 
 import { Form, Button } from "react-bootstrap";
-import { useLocation } from 'react-router';
 
 export default function CensusFormPage() {
   const location = useLocation();
@@ -51,8 +50,9 @@ export default function CensusFormPage() {
     };
 
     try {
-      const response = await axios.post(`http://localhost:3001/api/forms/save`, { ecn: ecn, formData });
-      const stateChange = await axios.post('http://localhost:3001/api/forms/submit', { ecn: ecn });
+      console.log(ecn)
+      console.log(formData)
+      const response = await axios.post(`http://localhost:3001/api/form/save`, { ecn: ecn, censusData : formData });
       console.log(response.data.message);
     } catch (error) {
       console.error('Hubo un problema al guardar los datos del formulario:', error.response ? error.response.data : error.message);
@@ -60,6 +60,7 @@ export default function CensusFormPage() {
   };
 
   const handleSubmit = (e) => {
+    e.stopPropagation();
     e.preventDefault();
     handleEnviarFormulario();
   };
@@ -111,7 +112,7 @@ export default function CensusFormPage() {
             </div>
             <br></br>
 
-            <Form>
+            <Form onSubmit={handleSubmit}>
               <p><strong>Antes de responder la Pregunta #1, cuente las personas que viven en esta casa, apartamento o casa móvil con base en las siguientes reglas:</strong></p>
               <ul>
                 <li>Cuente a todas las personas, incluidos los bebés, que viven y duermen aquí la mayor parte del tiempo</li>
@@ -364,11 +365,9 @@ export default function CensusFormPage() {
                   onChange={(e) => setComentarios(e.target.value)}
                 />
               </Form.Group>
-              <Form onSubmit={handleSubmit}>
-                <Button style={{ margin: "20px 0px 10px 0px" }} variant="primary" type="submit">
-                  Enviar
-                </Button>
-              </Form>
+              <Button style={{ margin: "20px 0px 10px 0px" }} variant="primary" type="submit">
+                Enviar
+              </Button>
             </Form>
           </div>
         </section>

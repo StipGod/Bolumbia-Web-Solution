@@ -2,7 +2,6 @@ const pool = require('../db');
 
 exports.login = async (req, res) => {
   try {
-    console.log("hola")
     const { ecn, cfn } = req.body;
     
     const ecnCheck = 'SELECT "CensusData" FROM "CensusForm" WHERE "ECN" = $1 AND "state" != $2'; 

@@ -9,7 +9,7 @@ exports.getForm = async (req, res) => {
     console.log(ecn);
     try {
     const query = 'SELECT "CensusData" FROM "CensusForm" WHERE "ECN" = $1 AND "state" != $2';
-    const result = await pool.query(query, [ecn, 'R']);
+    const result = await pool.query(query, [ecn, 'ND']);
 
     if (result.rows.length === 0) {
       return res.status(404).json({ message: 'Form not found or it is already completed' });
@@ -53,7 +53,6 @@ exports.getForm = async (req, res) => {
   
   exports.submitForm = async (req, res) => {
     const { ecn } = req.body;
-
     try {
       const updateQuery = `
         UPDATE "CensusForm"
